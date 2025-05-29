@@ -1,0 +1,26 @@
+📁 webapp-cotizaciones/
+├── 📁 assets/
+│   ├── css/
+│   │   └── styles.css (estilos principales)
+│   ├── js/
+│   │   └── scripts.js (funciones JS)
+│   └── img/ (imágenes del proyecto)
+├── 📁 includes/
+│   ├── config.php (configuración BD)
+│   ├── auth_functions.php (funciones de autenticación)
+│   ├── pdf_functions.php (generación PDF)
+│   └── email_functions.php (envío de correos)
+├── 📁 logs/ (PDFs temporales)
+├── 📁 templates/
+│   ├── header.php
+│   ├── footer.php
+│   └── navigation.php
+├── 📄 index.php (landing page)
+├── 📄 register.php (registro)
+├── 📄 login.php (inicio sesión)
+├── 📄 forgot-password.php (recuperación)
+├── 📄 reset-password.php (restablecer contraseña)
+├── 📄 dashboard.php (panel usuario)
+├── 📄 cotizador.php (formulario cotización)
+├── 📄 procesar_cotizacion.php (genera PDF/envía email)
+└── 📄 logout.php (cerrar sesión)
