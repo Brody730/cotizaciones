@@ -7,9 +7,9 @@ define('DB_NAME', 'if0_39106407_webapp');
 define('DB_PORT', 3306);
 
 // Configuración de correo
-define('MAIL_HOST', 'smtp.example.com');
-define('MAIL_USER', 'correo@example.com');
-define('MAIL_PASS', 'password');
+define('MAIL_HOST', 'smtp.gmail.com');
+define('MAIL_USER', 'imbestseth@gmail.com');
+define('MAIL_PASS', '<?php include "password" ?>');
 define('MAIL_PORT', 587);
 
 // Iniciar sesión
