@@ -1,10 +1,14 @@
 <?php
-include 'includes/config.php';
-include 'includes/auth_functions.php';
+// Definir rutas base
+$base_path = '/cotizadorpro/'; // Ruta relativa al dominio
+
+// Incluir archivos necesarios
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/auth_functions.php';
 
 // Verificar sesión
 if(!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: " . $base_path . 'login.php');
     exit;
 }
 
@@ -13,15 +17,15 @@ $stmt = $pdo->prepare("SELECT * FROM cotizaciones WHERE usuario_id = ? ORDER BY 
 $stmt->execute([$_SESSION['user_id']]);
 $cotizaciones = $stmt->fetchAll();
 
-include 'templates/header.php';
+include __DIR__ . '/templates/header.php';
 ?>
 
 <div class="container">
-    <h2>Bienvenido, <?php echo htmlspecialchars($_SESSION['user_nombre']); ?></h2>
+    <h2>Bienvenido, <?php echo isset($_SESSION['user_nombre']) ? htmlspecialchars($_SESSION['user_nombre']) : 'Usuario'; ?></h2>
     
     <div class="actions mb-4">
-        <a href="cotizador.php" class="btn btn-primary">Nueva Cotización</a>
-        <a href="logout.php" class="btn btn-secondary">Cerrar Sesión</a>
+        <a href="<?php echo $base_path; ?>cotizador.php" class="btn btn-primary">Nueva Cotización</a>
+        <a href="<?php echo $base_path; ?>logout.php" class="btn btn-secondary">Cerrar Sesión</a>
     </div>
     
     <h3>Mis Cotizaciones Recientes</h3>
@@ -50,7 +54,8 @@ include 'templates/header.php';
                             <td>$<?php echo number_format($cotizacion['precio'], 2); ?></td>
                             <td><?php echo date('d/m/Y', strtotime($cotizacion['fecha_creacion'])); ?></td>
                             <td>
-                                <a href="logs/<?php echo $cotizacion['pdf_filename']; ?>" target="_blank" class="btn btn-sm btn-info">Ver PDF</a>
+                                <a href="<?php echo $base_path; ?>logs/<?php echo $cotizacion['pdf_filename']; ?>" target="_blank" class="btn btn-sm btn-info">Ver PDF</a>
+                                <button onclick="confirmDelete(<?php echo $cotizacion['id']; ?>)" class="btn btn-sm btn-danger">Eliminar</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -60,4 +65,13 @@ include 'templates/header.php';
     <?php endif; ?>
 </div>
 
-<?php include 'templates/footer.php'; ?>
+<?php include __DIR__ . '/templates/footer.php'; ?>
+
+<script>
+// Script para confirmar eliminación
+function confirmDelete(id) {
+    if (confirm('¿Estás seguro de que deseas eliminar esta cotización?')) {
+        window.location.href = '<?php echo $base_path; ?>actions/delete_cotizacion.php?id=' + id;
+    }
+}
+</script>

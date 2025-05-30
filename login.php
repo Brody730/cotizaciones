@@ -24,20 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new PDOException('No se pudo establecer la conexión a la base de datos.');
             }
 
-            // Intentar consulta
-            $stmt = $pdo->prepare('SELECT id, email, password FROM usuarios WHERE email = ?');
-            if (!$stmt) {
-                throw new PDOException('Error en la preparación de la consulta.');
-            }
-
-            $stmt->execute([$email]);
-            $user = $stmt->fetch();
-            
-            if ($user && password_verify($password, $user['password'])) {
-                // Iniciar sesión exitosa
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['email'] = $user['email'];
-                
+            // Iniciar sesión usando la función loginUsuario
+            if (loginUsuario($pdo, $email, $password)) {
                 // Redirigir al dashboard
                 header('Location: dashboard.php');
                 exit;

@@ -1,12 +1,17 @@
 <?php
-// Incluir las clases de PHPMailer al inicio del archivo
+// Incluir las clases de PHPMailer usando Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// Verificar que las clases están disponibles
+if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
+    error_log("Error: PHPMailer no está disponible. Por favor, instale PHPMailer usando Composer.");
+    exit("Error: PHPMailer no está disponible. Por favor, ejecute el script install-phpmailer.php para instalar PHPMailer.");
+}
+
+// Usar los namespaces de PHPMailer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-
-require 'libs/PHPMailer/src/PHPMailer.php';
-require 'libs/PHPMailer/src/SMTP.php';
-require 'libs/PHPMailer/src/Exception.php';
 
 function enviarEmailCotizacion($email_destino, $nombre_destino, $pdf_filename) {
     $mail = new PHPMailer(true); // Habilitar excepciones
@@ -15,11 +20,15 @@ function enviarEmailCotizacion($email_destino, $nombre_destino, $pdf_filename) {
         // Configuración del servidor SMTP
         $mail->isSMTP();
         $mail->Host = MAIL_HOST;
-        $mail->SMTPAuth = true;
+        $mail->SMTPAuth = MAIL_SMTPAUTH;
         $mail->Username = MAIL_USER;
         $mail->Password = MAIL_PASS;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Usar constante de PHPMailer
+        $mail->SMTPSecure = MAIL_SMTPSECURE;
         $mail->Port = MAIL_PORT;
+        
+        // Configuración adicional
+        $mail->CharSet = 'UTF-8';
+        $mail->SMTPDebug = MAIL_DEBUG; // Habilitar modo debug
         
         // Remitente y destinatario
         $mail->setFrom(MAIL_USER, 'Sistema de Cotizaciones');
@@ -40,12 +49,15 @@ function enviarEmailCotizacion($email_destino, $nombre_destino, $pdf_filename) {
         
         $mail->Body = $body;
         $mail->AltBody = strip_tags($body);
-        $mail->addAttachment('logs/' . $pdf_filename);
+        
+        // Agregar archivo adjunto con ruta absoluta
+        $mail->addAttachment(ROOT_PATH . '/logs/' . $pdf_filename);
         
         $mail->send();
         return true;
     } catch (Exception $e) {
-        error_log("Error al enviar correo: " . $mail->ErrorInfo);
+        error_log("Error al enviar correo: " . $e->getMessage());
+        error_log("Detalles del error: " . $mail->ErrorInfo);
         return false;
     }
 }

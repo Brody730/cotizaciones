@@ -1,6 +1,33 @@
 <?php
 include 'includes/config.php';
 include 'includes/auth_functions.php';
+include 'includes/email_functions.php';
+
+// Verificar que la función enviarEmailRecuperacion existe
+if (!function_exists('enviarEmailRecuperacion')) {
+    error_log("La función enviarEmailRecuperacion no está definida");
+    exit("Error: La función enviarEmailRecuperacion no está definida");
+}
+
+if($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = $_POST['email'];
+    $token = generarTokenRecuperacion($pdo, $email);
+    
+    if(is_string($token)) {
+        if(enviarEmailRecuperacion($email, $token)) {
+            $_SESSION['mensaje'] = "Se ha enviado un enlace de recuperación a tu correo electrónico";
+        } else {
+            $_SESSION['error'] = "Error al enviar el correo de recuperación";
+        }
+    } else {
+        $_SESSION['error'] = $token;
+    }
+    
+    header("Location: forgot-password.php");
+    exit;
+}
+
+include 'templates/header.php';
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];

@@ -34,24 +34,29 @@ function loginUsuario($pdo, $email, $password) {
 }
 
 function generarTokenRecuperacion($pdo, $email) {
-    // Verificar si el email existe
-    $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
-    $stmt->execute([$email]);
-    
-    if($stmt->rowCount() == 0) {
-        return "El correo electrónico no está registrado";
-    }
-    
-    // Generar token único
-    $token = bin2hex(random_bytes(50));
-    $expira = date("Y-m-d H:i:s", strtotime("+1 hour"));
-    
-    // Guardar token en la base de datos
-    $stmt = $pdo->prepare("UPDATE usuarios SET reset_token = ?, reset_expira = ? WHERE email = ?");
-    if($stmt->execute([$token, $expira, $email])) {
+    try {
+        // Verificar si el email existe
+        $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
+        $stmt->execute([$email]);
+        $usuario = $stmt->fetch();
+        
+        if(!$usuario) {
+            return "El correo electrónico no está registrado";
+        }
+        
+        // Generar token único
+        $token = bin2hex(random_bytes(32));
+        $expiracion = date('Y-m-d H:i:s', strtotime('+1 hour'));
+        
+        // Insertar token en la tabla tokens_recuperacion
+        $stmt = $pdo->prepare("INSERT INTO tokens_recuperacion (usuario_id, token, expiracion) VALUES (?, ?, ?)");
+        $stmt->execute([$usuario['id'], $token, $expiracion]);
+        
         return $token;
+    } catch(PDOException $e) {
+        error_log("Error en generarTokenRecuperacion: " . $e->getMessage());
+        return "Error al generar el token";
     }
-    return "Error al generar el token";
 }
 
 function cambiarPassword($pdo, $token, $newPassword) {

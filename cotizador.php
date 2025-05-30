@@ -58,6 +58,10 @@ include 'templates/header.php';
             <input type="email" name="email" id="email" class="form-control" value="<?php echo $_SESSION['user_email']; ?>" required>
         </div>
         
+        <input type="hidden" name="nombre" value="<?php echo htmlspecialchars($_SESSION['user_nombre']); ?>">
+        
+        <div class="form-actions">
+        
         <div class="form-actions">
             <button type="submit" name="accion" value="previsualizar" class="btn btn-info">Previsualizar Cotización</button>
             <button type="submit" name="accion" value="enviar" class="btn btn-primary">Enviar Cotización por Email</button>

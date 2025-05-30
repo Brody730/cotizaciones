@@ -1,0 +1,189 @@
+/* Features Section - Animaciones mejoradas */
+.features {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin: 3rem 0;
+    perspective: 1000px;
+}
+
+.feature {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    width: 320px;
+    box-shadow: 0 10px 30px rgba(67, 97, 238, 0.1);
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transform-style: preserve-3d;
+}
+
+.feature::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(67, 97, 238, 0) 100%);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.feature:hover {
+    transform: translateY(-15px) scale(1.05) rotateX(5deg);
+    box-shadow: 0 15px 35px rgba(67, 97, 238, 0.2);
+}
+
+.feature:hover::before {
+    opacity: 1;
+}
+
+/* Efecto de brinco continuo (sin hover) */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.feature {
+    animation: float 4s ease-in-out infinite;
+}
+
+.feature:nth-child(1) {
+    animation-delay: 0s;
+}
+.feature:nth-child(2) {
+    animation-delay: 0.5s;
+}
+.feature:nth-child(3) {
+    animation-delay: 1s;
+}
+
+/* Efecto de iluminación */
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 10px 30px rgba(67, 97, 238, 0.1);
+    }
+    50% {
+        box-shadow: 0 15px 40px rgba(67, 97, 238, 0.3);
+    }
+}
+
+.feature {
+    animation: float 4s ease-in-out infinite, glow 6s ease-in-out infinite;
+}
+
+/* Contenido de las cards */
+.feature h3 {
+    color: #4361ee;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+.feature h3::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: #4361ee;
+    transition: width 0.3s ease;
+}
+
+.feature:hover h3::after {
+    width: 100%;
+}
+
+.feature p {
+    color: #4a5568;
+    line-height: 1.7;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.feature:hover p {
+    color: #2d3748;
+}
+
+/* Íconos para las features (añade esto en tu HTML) */
+.feature-icon {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+    display: inline-block;
+    transition: transform 0.5s ease;
+}
+
+.feature:hover .feature-icon {
+    transform: rotate(10deg) scale(1.2);
+}
+
+/* Efecto al hacer click */
+.feature:active {
+    transform: scale(0.95) translateY(0);
+    animation: none;
+}
+/* Efecto highlight aleatorio */
+.feature.highlight {
+    animation: pulse 1s ease;
+    box-shadow: 0 0 0 5px rgba(67, 97, 238, 0.2);
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.2); }
+    100% { box-shadow: 0 0 0 15px rgba(67, 97, 238, 0); }
+}
+
+/* Transición suave para las cards */
+.feature {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: 
+        opacity 0.6s ease-out,
+        transform 0.6s ease-out,
+        box-shadow 0.3s ease;
+}
+
+/* Notificación flotante */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #4361ee;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.notification.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.notification.success {
+    background: #2ecc71;
+}
+
+.notification.error {
+    background: #e74c3c;
+}
+
+.notification.warning {
+    background: #f39c12;
+}

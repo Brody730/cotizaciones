@@ -17,6 +17,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $plazo = $_POST['plazo'];
     $descripcion = $_POST['descripcion'];
     $email = $_POST['email'];
+    $nombre_cliente = $_POST['nombre'];
     $accion = $_POST['accion'];
     
     // Validar datos
@@ -30,7 +31,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cotizacion = calcularCotizacion($tipo_servicio, $complejidad, $plazo);
     
     // Generar PDF
-    $pdf_filename = generarPDFCotizacion($_SESSION['user_nombre'], $email, $tipo_servicio, $complejidad, $plazo, $descripcion, $cotizacion);
+    $pdf_filename = generarPDFCotizacion($nombre_cliente, $email, $tipo_servicio, $complejidad, $plazo, $descripcion, $cotizacion);
     
     // Guardar en base de datos
     try {
